@@ -4,14 +4,17 @@ import flask
 import json
 import dotenv
 import os
+
 dotenv.load_dotenv()
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_KEY = os.getenv('OPENAI_KEY')
 MDBLIST_KEY = os.getenv('MDBLIST_KEY')
 
 app = flask.Flask(__name__)
 
+
 def get_reviews(imdb_id):
-        return requests.get(f'https://mdblist.com/api/?apikey={MDBLIST_KEY}&i={imdb_id}').json()
+    return requests.get(f'https://mdblist.com/api/?apikey={MDBLIST_KEY}&i={imdb_id}').json()
+
 
 def handle_reviews(raw):
     title = raw['title']
@@ -33,7 +36,7 @@ def ask_chatgpt(reviews, title):
     These are the reviews:
     {reviews}
     """
-    openai.api_key = OPENAI_API_KEY
+    openai.api_key = OPENAI_KEY
     completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": input}])
     output = completion.choices[0].message.content
     output.encode('utf-8').decode('unicode_escape')
